@@ -1,0 +1,9 @@
+*.bak
+Backup_*
+
+*.qws
+db/
+incremental_db/
+simulation/
+output_files/
+
