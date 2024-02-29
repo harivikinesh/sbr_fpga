@@ -1,9 +1,8 @@
 
 module motor_control (
     input clk, reset,
-    input [1:0] direction,
+    input [15:0] accel_y,
     input [1:0] r_enc, l_enc,
-    input [7:0] velocity,
     output reg enA, In1, In2,
     output reg enB, In3, In4,
     // counters for encoders
@@ -22,26 +21,26 @@ always @(posedge clk) begin
         enA = 0; enB = 0;
     end
     else begin
-        case (direction)
-            0: //forward
-            begin
-                enA = 0; enB = 0;
-                In1 = 0; In2 = 0;
-                In3 = 0; In4 = 0;
-            end
-            1: //backward
-            begin
-                enA = 1; enB = 1;
-                In1 = 1; In2 = 0;
-                In3 = 1; In4 = 0;
-            end
-            2: //stop
-            begin
-                enA = 1; enB = 1;
-                In1 = 0; In2 = 1;
-                In3 = 0; In4 = 1;
-            end
-        endcase
+        // case (direction)
+        //     0: //forward
+        //     begin
+        //         enA = 0; enB = 0;
+        //         In1 = 0; In2 = 0;
+        //         In3 = 0; In4 = 0;
+        //     end
+        //     1: //backward
+        //     begin
+        //         enA = 1; enB = 1;
+        //         In1 = 1; In2 = 0;
+        //         In3 = 1; In4 = 0;
+        //     end
+        //     2: //stop
+        //     begin
+        //         enA = 1; enB = 1;
+        //         In1 = 0; In2 = 1;
+        //         In3 = 0; In4 = 1;
+        //     end
+        // endcase
     end
 end
 
