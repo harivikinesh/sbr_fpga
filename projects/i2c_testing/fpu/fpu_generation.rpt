@@ -1,0 +1,28 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate /home/vickey/e-Yantra/self-balancing-robot-fpga/projects/i2c_testing/fpu.qsys --block-symbol-file --output-directory=/home/vickey/e-Yantra/self-balancing-robot-fpga/projects/i2c_testing/fpu --family="Cyclone IV E" --part=EP4CE22F17C6
+Progress: Loading i2c_testing/fpu.qsys
+Progress: Reading input file
+Progress: Adding nios_custom_instr_floating_point_2_combi_0 [altera_nios_custom_instr_floating_point_2_combi 20.1]
+Progress: Parameterizing module nios_custom_instr_floating_point_2_combi_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate /home/vickey/e-Yantra/self-balancing-robot-fpga/projects/i2c_testing/fpu.qsys --synthesis=VERILOG --output-directory=/home/vickey/e-Yantra/self-balancing-robot-fpga/projects/i2c_testing/fpu/synthesis --family="Cyclone IV E" --part=EP4CE22F17C6
+Progress: Loading i2c_testing/fpu.qsys
+Progress: Reading input file
+Progress: Adding nios_custom_instr_floating_point_2_combi_0 [altera_nios_custom_instr_floating_point_2_combi 20.1]
+Progress: Parameterizing module nios_custom_instr_floating_point_2_combi_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: fpu: Generating fpu "fpu" for QUARTUS_SYNTH
+Info: nios_custom_instr_floating_point_2_combi_0: "fpu" instantiated altera_nios_custom_instr_floating_point_2_combi "nios_custom_instr_floating_point_2_combi_0"
+Info: fpu: Done "fpu" with 2 modules, 6 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

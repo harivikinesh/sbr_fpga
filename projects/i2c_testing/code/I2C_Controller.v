@@ -64,9 +64,9 @@ always@(posedge clk,negedge rst) begin
                 if (!core_busy)
                 begin
                     rw        <=0;                  // write operation
-                    slave_addr<=7'h68;              // slave address of mpu6050
-                    reg_addr  <=8'h6B;              // PWR_MGT1 reg address
-                    reg_data  <=8'h01;              // sets the clock for x reference
+                    slave_addr<=7'h1D;              // slave address of mpu6050
+                    reg_addr  <=8'h2D;              // PWR_MGT1 reg address
+                    reg_data  <=8'h08;              // sets the clock for x reference
                     data_valid<=1'b1;               // send the data
                     nst<=WAIT_ACK;
                 end
@@ -88,8 +88,8 @@ always@(posedge clk,negedge rst) begin
                 if (!core_busy)
                     begin
                     rw        <=1;                  // read operation
-                    slave_addr<=7'h68;
-                    reg_addr  <=8'h43;              // GYRO X-axis data register in MPU6050, next address of reg
+                    slave_addr<=7'h1D;
+                    reg_addr  <=8'h34;              // GYRO X-axis data register in MPU6050, next address of reg
                     reg_data  <=8'h00;
                     data_valid<=1'b1;               // send the data
                     end
