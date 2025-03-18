@@ -14,22 +14,22 @@ module fpu_adder(
     wire sign_result;
 
     // Adjust sign of b for subtraction (invert the sign)
-    wire actual_sign_b = 	sign_b;
+    wire actual_sign_b = ~sign_b;
 
     // Align the exponents by shifting the mantissas
     wire [7:0] exp_diff;
     wire [23:0] mant_a_shifted, mant_b_shifted;
-    
+
     assign exp_diff = (exp_a > exp_b) ? (exp_a - exp_b) : (exp_b - exp_a);
     assign mant_a_shifted = (exp_a >= exp_b) ? mant_a : (mant_a >> exp_diff);
     assign mant_b_shifted = (exp_b >= exp_a) ? mant_b : (mant_b >> exp_diff);
 
     // Perform subtraction on the mantissas
 
-    
-    assign {sign_result, mant_diff} = (sign_a == actual_sign_b) ? 
-        ({1'b0, mant_a_shifted} + {1'b0, mant_b_shifted}) : 
-        (mant_a_shifted > mant_b_shifted ? 
+
+    assign {sign_result, mant_diff} = (sign_a == actual_sign_b) ?
+        ({1'b0, mant_a_shifted} + {1'b0, mant_b_shifted}) :
+        (mant_a_shifted > mant_b_shifted ?
             ({1'b0, mant_a_shifted} - {1'b0, mant_b_shifted}) :
             ({1'b0, mant_b_shifted} - {1'b0, mant_a_shifted}));
 

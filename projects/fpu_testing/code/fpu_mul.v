@@ -1,39 +1,46 @@
 module fpu_mul(
     input [31:0] a,
+    input [31:0] b,
     output reg [31:0] result
 );
 
-//  ieee value for 0.07s
-parameter b = 32'h3d8f5c29;
+   wire sign_a = a[31];
+   wire sign_b = b[31];
+   wire sign_result;
 
-reg a_sign;
-reg [7:0] a_exponent;
-reg [23:0] a_mantissa;
-reg b_sign=0;
-reg [7:0] b_exponent;
-reg [23:0] b_mantissa;
-reg [7:0] new_exponent;
-reg [7:0] new_exponent2;
-reg [22:0] product;
-reg [47:0] temp_mantissa;
-always @* begin
-	b_sign = b[31];
-   b_exponent = b[30:23];
-	b_mantissa = {1'b1, b[22:0]};
-  	a_sign = a[31];
-   a_exponent = a[30:23];
-   a_mantissa = {1'b1, a[22:0]};
-   new_exponent = a_exponent + b_exponent - 127;	// Bias for single-precision
-	////new_exponent2 = dividend_exponent - divisor_exponent + 126;
-end
-always @* begin
-   temp_mantissa = a_mantissa * b_mantissa;
-   product = temp_mantissa[46:23]; // Extract quotient
-end
+   wire [7:0] exp_a = a[30:23];
+   wire [7:0] exp_b = b[30:23];
+   wire [7:0] new_exp;
+   reg [7:0] final_exp;
 
-    // Check for overflow or underflow
-always @* begin
-   result = {a_sign, new_exponent, product};
-end
+   wire [23:0] mant_a = {1'b1, a[22:0]}; // Add the implicit leading 1
+   wire [23:0] mant_b = {1'b1, b[22:0]}; // Add the implicit leading 1
+   wire [47:0] temp_mant;
+   reg [22:0] final_mant;
+
+   // compute sign bit
+   assign sign_result = sign_a ^ sign_b;
+
+   // Add baised exponenet
+   assign new_exp = exp_a + exp_b - 8'd127;
+
+   // Multiply the mantissa,
+   assign temp_mant = mant_a * mant_b;
+
+   // Handle 48 bit temporary mantissa
+   always @* begin
+          if (temp_mant[47]) begin  // overflow checking
+              final_mant = temp_mant[46:24];
+              final_exp = new_exp + 1;
+          end else begin
+              final_mant = temp_mant[45:23];
+              final_exp = new_exp;
+          end
+      end
+
+    // final result representation
+    always @* begin
+      result = {sign_result,final_exp,final_mant};
+    end
 
 endmodule
