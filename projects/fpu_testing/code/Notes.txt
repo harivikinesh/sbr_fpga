@@ -1,0 +1,14 @@
+F extension in RISC-V
+    1.f0-f31 registers.
+    2.fcsr- floating point control and status register.
+    3.fcsr - holds the status of operating mode and exception status.
+    4. FLEN - width of floating-point registers.
+
+    fcsr = 31:8 reserved
+            7:5 rounding mode(frm)
+            4:0 accrued exceptions (flags)
+            4 - NV
+            3 - DZ
+            2 - OF
+            1 - UF
+            0 - NX

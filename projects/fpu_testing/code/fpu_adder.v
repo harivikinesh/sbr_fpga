@@ -10,30 +10,26 @@ module fpu_adder(
     wire [7:0] exp_b = b[30:23];
     wire [23:0] mant_a = {1'b1, a[22:0]}; // Add the implicit leading 1
     wire [23:0] mant_b = {1'b1, b[22:0]}; // Add the implicit leading 1
-	 wire [24:0] mant_diff;
+    wire [24:0] mant_diff;
     wire sign_result;
 
-    // Adjust sign of b for subtraction (invert the sign)
-    wire actual_sign_b = ~sign_b;
+    wire _subtract = (sign_a ^ sign_b);
 
     // Align the exponents by shifting the mantissas
     wire [7:0] exp_diff;
     wire [23:0] mant_a_shifted, mant_b_shifted;
 
+    // compare exponent.
     assign exp_diff = (exp_a > exp_b) ? (exp_a - exp_b) : (exp_b - exp_a);
+
+    // shift mantissa by the exp_diff
     assign mant_a_shifted = (exp_a >= exp_b) ? mant_a : (mant_a >> exp_diff);
     assign mant_b_shifted = (exp_b >= exp_a) ? mant_b : (mant_b >> exp_diff);
 
-    // Perform subtraction on the mantissas
+    // Perform addition and subtraction on the mantissas
+    assign {sign_result, mant_diff} = _subtract ? (mant_a_shifted > mant_b_shifted ? ({1'b0, mant_a_shifted} - {1'b0,mant_b_shifted}) : ({1'b0, mant_b_shifted} - {1'b0,mant_a_shifted})) : ({1'b0,mant_a_shifted} + {1'b0,mant_b_shifted});
 
-
-    assign {sign_result, mant_diff} = (sign_a == actual_sign_b) ?
-        ({1'b0, mant_a_shifted} + {1'b0, mant_b_shifted}) :
-        (mant_a_shifted > mant_b_shifted ?
-            ({1'b0, mant_a_shifted} - {1'b0, mant_b_shifted}) :
-            ({1'b0, mant_b_shifted} - {1'b0, mant_a_shifted}));
-
-    // Determine the result e xponent
+    // Determine the result exponent
     wire [7:0] exp_result;
     assign exp_result =(exp_a >= exp_b) ? exp_a : exp_b;
 

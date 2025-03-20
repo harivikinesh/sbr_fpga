@@ -1,41 +1,37 @@
 module fpu_division(
-    input [31:0] dividend,
-    output reg [31:0] fpu_value //Changle and Changle/2
+    input [31:0] a,
+    input [31:0] b,
+    output reg [31:0] result
 );
 
+   // extract sign
+   wire sign_a = a[31];
+   wire sign_b = b[31];
 
+   // extract exponent.
+   wire [7:0] exp_a = a[30:23];
+   wire [7:0] exp_b = b[30:23];
+   wire [7:0] new_exp;
 
-reg dividend_sign;
-reg [7:0] dividend_exponent;
-reg [23:0] dividend_mantissa;
-reg divisor_sign = 0;
+   // extract mantissa.
+   wire [23:0] mant_a = {1'b1,a[22:0]};
+   wire [23:0] mant_b = {1'b1,b[22:0]};
+   wire [47:0] temp_mant;
+   wire [22:0] final_mant;
 
-// ieee value for 131
-// sign exponent mantissa
-// 0 1000011 000000110000000000000000
-reg [7:0] divisor_exponent=8'b10000011;
-reg [23:0] divisor_mantissa=24'b0000000110000000000000000;
+   // compute sign
+   wire sign_result = sign_a ^ sign_b;
 
-reg [7:0] new_exponent;
-reg [7:0] new_exponent2;
-reg [22:0] quotient;
-reg [47:0] temp_mantissa;
+   // Compute exponent.
+   assign new_exp = (exp_a - exp_b) + 8'd127;
 
-always @(dividend) begin
-   dividend_mantissa = {1'b1, dividend[22:0]};
-	dividend_sign = dividend[31];
-   dividend_exponent = dividend[30:23];
-   dividend_mantissa = {1'b1, dividend[22:0]};
-   new_exponent = dividend_exponent - divisor_exponent + 127;	// Bias for single-precision
-end
-always @* begin
-   temp_mantissa = {dividend_mantissa, 24'd0} / divisor_mantissa;
-   quotient = temp_mantissa[23:1]; // Extract quotient
-end
+   // Divide Mantissas
+   assign temp_mant = {mant_a,24'b0}/ mant_b;
+   assign final_mant = temp_mant[23:1];
 
-    // Check for overflow or underflow
-always @* begin
-   fpu_value = {dividend_sign, new_exponent, quotient};
-end
+    // fpu value representation.
+   always @* begin
+      result = {sign_result, new_exp, final_mant};
+   end
 
 endmodule
